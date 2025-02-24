@@ -1,14 +1,19 @@
+vim.cmd("let g:netrw_liststyle = 3")
+
 local map = vim.keymap.set
-local set = vim.opt
+local opt = vim.opt
 local defaults = { noremap = true, silent = true }
 
--- Tabs settings
-set.tabstop = 2
-set.shiftwidth = 2
-set.expandtab = true
-set.softtabstop = 2
+opt.relativenumber = true
+opt.number = true
 
--- Map jj to esc
+-- Tabs settings
+opt.tabstop = 2
+opt.shiftwidth = 2
+opt.expandtab = true
+opt.softtabstop = 2
+
+-- Map jk to esc
 map('i', 'jk', '<esc>l', defaults)
 
 -- Map leader to <Space>
