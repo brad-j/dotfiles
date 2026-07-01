@@ -101,6 +101,17 @@ _tz_session_name() {
     print -r -- "${name:-agent}"
 }
 
+_tz_attach_or_switch() {
+    emulate -L zsh
+    local session="$1"
+
+    if [[ -n "${TMUX:-}" ]]; then
+        tmux switch-client -t "$session"
+    else
+        tmux attach -t "$session"
+    fi
+}
+
 # Remote side: resolve a project/path to a directory and create/attach the
 # project tmux session with pi as the initial command.
 tzr() {
@@ -138,7 +149,20 @@ tzr() {
         return 1
     fi
 
-    exec tmux new-session -A -s "$session" -c "$dir" pi
+    if tmux has-session -t "$session" 2>/dev/null; then
+        if [[ -n "${TMUX:-}" ]]; then
+            tmux switch-client -t "$session"
+        else
+            exec tmux attach -t "$session"
+        fi
+    else
+        if [[ -n "${TMUX:-}" ]]; then
+            tmux new-session -d -s "$session" -c "$dir" pi
+            tmux switch-client -t "$session"
+        else
+            exec tmux new-session -s "$session" -c "$dir" pi
+        fi
+    fi
 }
 
 tz() {
@@ -156,11 +180,11 @@ tz() {
     # No args preserves the old behavior: a plain tmux-backed SSH doorway.
     if [[ $# -eq 0 || "${1:-}" == "$host" ]]; then
         if [[ "$current_host" == "$host" ]]; then
-            tmux new-session -A -s "$host"
+            tmux has-session -t "$host" 2>/dev/null || tmux new-session -d -s "$host"
         else
             tmux has-session -t "$host" 2>/dev/null || tmux new-session -d -s "$host" "ssh -t ${(q)host}"
-            tmux attach -t "$host"
         fi
+        _tz_attach_or_switch "$host"
         return
     fi
 
@@ -179,7 +203,7 @@ tz() {
 
     tmux has-session -t "$local_session" 2>/dev/null || \
         tmux new-session -d -s "$local_session" "ssh -t ${(q)host} ${(q)remote_cmd}"
-    tmux attach -t "$local_session"
+    _tz_attach_or_switch "$local_session"
 }
 
 # pi
