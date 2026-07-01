@@ -1,6 +1,6 @@
 # ~/.zshrc
-# Rebuilt after accidental reset. Keep machine-specific shell wiring here;
-# keep aliases/functions in $ZSH_CUSTOM/*.zsh.
+# Portable interactive Zsh config shared between macOS and Linux.
+# Keep aliases/functions in ~/.config/omz/*.zsh.
 
 # De-dupe PATH/fpath while preserving first occurrence.
 typeset -U path PATH fpath FPATH
@@ -10,11 +10,30 @@ if [[ -x /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -x /usr/local/bin/brew ]]; then
   eval "$(/usr/local/bin/brew shellenv)"
+elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
-# User/bin paths. PNPM currently has executables in both $PNPM_HOME and $PNPM_HOME/bin.
-export PNPM_HOME="$HOME/Library/pnpm"
-export BUN_INSTALL="$HOME/.bun"
+# User/bin paths.
+if [[ "$OSTYPE" == darwin* ]]; then
+  export PNPM_HOME="${PNPM_HOME:-$HOME/Library/pnpm}"
+else
+  if [[ -z "${PNPM_HOME:-}" || "$PNPM_HOME" == /Users/* || "$PNPM_HOME" == "$HOME/Library/pnpm" ]]; then
+    export PNPM_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
+  else
+    export PNPM_HOME
+  fi
+fi
+export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
+
+# If a Linux session inherits macOS PATH/PNPM values, strip them before adding
+# the Linux equivalents below.
+if [[ "$OSTYPE" != darwin* ]]; then
+  path=(${path:#/Users/*})
+  path=(${path:#$HOME/Library/pnpm})
+  path=(${path:#$HOME/Library/pnpm/bin})
+fi
+
 path=(
   "$HOME/.local/bin"
   "$HOME/.pi/agent/bin"
@@ -23,11 +42,28 @@ path=(
   "$PNPM_HOME"
   "$BUN_INSTALL/bin"
   "$HOME/.npm-global/bin"
+  "$HOME/.cargo/bin"
   $path
 )
 export PATH
 
-# Oh My Zsh
+# Node via fnm on Linux/this box; fall back to nvm for the Mac.
+FNM_PATH="${FNM_PATH:-$HOME/.local/share/fnm}"
+if [[ -x "$FNM_PATH/fnm" ]]; then
+  path=("$FNM_PATH" $path)
+  export PATH
+  eval "$("$FNM_PATH/fnm" env --shell zsh)"
+elif command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --shell zsh)"
+fi
+
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if ! command -v node >/dev/null 2>&1; then
+  [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
+fi
+[[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
+
+# Oh My Zsh.
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="agnoster"
 zstyle ':omz:update' mode auto
@@ -46,11 +82,6 @@ else
   export EDITOR='nvim'
 fi
 
-# Node via nvm.
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
-[[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
-
 # zoxide: provides `z`.
 if command -v zoxide >/dev/null 2>&1; then
   eval "$(zoxide init zsh)"
@@ -62,7 +93,10 @@ if [[ -t 0 && -t 1 ]] && command -v fzf >/dev/null 2>&1; then
   eval "$(fzf --zsh)"
 fi
 
-# zsh-autosuggestions installed by Homebrew.
+# bun completions.
+[[ -s "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"
+
+# zsh-autosuggestions.
 # Make one Tab accept the gray suggestion while preserving the current Tab widget.
 # fzf's shell integration rebinds Tab to fzf-completion when a real TTY is attached,
 # so include both OMZ's and fzf's Tab widgets in the autosuggestion accept list.
@@ -76,26 +110,31 @@ ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
   expand-or-complete-with-dots
   fzf-completion
 )
-if [[ -r /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-elif [[ -r /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-  source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
+for _autosuggestions in \
+  /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  /home/linuxbrew/.linuxbrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" \
+  "$ZSH_CUSTOM/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"; do
+  if [[ -r "$_autosuggestions" ]]; then
+    source "$_autosuggestions"
+    break
+  fi
+done
+unset _autosuggestions
 
 # zsh-syntax-highlighting, if installed later. Keep this last among zsh plugins.
-if [[ -r /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-elif [[ -r /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-  source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-elif [[ -r "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
-  source "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-fi
-
-
-# pnpm
-export PNPM_HOME="/Users/brad/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME/bin:"*) ;;
-  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
-esac
-# pnpm end
+for _syntax_highlighting in \
+  /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" \
+  "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"; do
+  if [[ -r "$_syntax_highlighting" ]]; then
+    source "$_syntax_highlighting"
+    break
+  fi
+done
+unset _syntax_highlighting
