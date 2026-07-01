@@ -12,6 +12,7 @@ Each top-level directory is a Stow package. The directory structure inside each 
 | `tmux` | `~/.config/tmux` | tmux config. |
 | `pi` | selected `~/.pi` files | Pi coding agent settings, models, trusted dirs, extensions, and themes. |
 | `zsh` | `~/.zshrc`, `~/.zprofile`, `~/.config/omz` | Zsh login/interactive config and Oh My Zsh custom aliases/functions. |
+| `yazi` | `~/.config/yazi` | Yazi file manager config and theme. |
 
 ## Layout
 
@@ -28,12 +29,16 @@ Each top-level directory is a Stow package. The directory structure inside each 
 │       ├── models.json
 │       ├── settings.json
 │       └── trust.json
-└── zsh/
-    ├── .zprofile
-    ├── .zshrc
-    └── .config/omz/
-        ├── aliases.zsh
-        └── functions.zsh
+├── zsh/
+│   ├── .zprofile
+│   ├── .zshrc
+│   └── .config/omz/
+│       ├── aliases.zsh
+│       └── functions.zsh
+└── yazi/
+    └── .config/yazi/
+        ├── theme.toml
+        └── yazi.toml
 ```
 
 ## First-time setup
@@ -54,13 +59,13 @@ cd ~/dotfiles
 Preview what Stow will do:
 
 ```bash
-stow -nv nvim tmux pi zsh
+stow -nv nvim tmux pi zsh yazi
 ```
 
 Apply the symlinks:
 
 ```bash
-stow nvim tmux pi zsh
+stow nvim tmux pi zsh yazi
 ```
 
 ## Common commands
@@ -69,14 +74,14 @@ Restow everything after changing package contents:
 
 ```bash
 cd ~/dotfiles
-stow -R nvim tmux pi zsh
+stow -R nvim tmux pi zsh yazi
 ```
 
 Preview a restow without changing anything:
 
 ```bash
 cd ~/dotfiles
-stow -nvR nvim tmux pi zsh
+stow -nvR nvim tmux pi zsh yazi
 ```
 
 Unstow a package:
@@ -106,6 +111,7 @@ stow nvim
 ~/.zshrc                    -> dotfiles/zsh/.zshrc
 ~/.zprofile                 -> dotfiles/zsh/.zprofile
 ~/.config/omz               -> ../dotfiles/zsh/.config/omz
+~/.config/yazi              -> ../dotfiles/yazi/.config/yazi
 ```
 
 ## Handling Stow conflicts
@@ -167,6 +173,19 @@ Intentionally not tracked:
 - `~/.oh-my-zsh/`
 
 `~/.oh-my-zsh` is treated as installed framework code. Custom shell behavior belongs in `~/.zshrc` or `~/.config/omz/*.zsh`.
+
+## Yazi notes
+
+Tracked Yazi files:
+
+- `~/.config/yazi/yazi.toml`
+- `~/.config/yazi/theme.toml`
+
+Intentionally not tracked:
+
+- `~/.local/state/yazi/`
+- Homebrew cache files
+- crash reports
 
 ## Workflow
 

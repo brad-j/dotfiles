@@ -13,3 +13,6 @@ zsh/.zcompdump*
 zsh/.zshrc.bak-*
 zsh/.oh-my-zsh/
 zsh/.config/omz/**/*.zwc
+
+# Yazi generated state
+yazi/.local/state/yazi/

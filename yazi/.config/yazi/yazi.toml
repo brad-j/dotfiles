@@ -1,0 +1,12 @@
+[mgr]
+show_hidden = true
+ratio = [ 2, 2, 4 ]
+show_symlink = true
+
+[preview]
+wrap = "yes"
+
+[opener]
+  edit = [
+    { run = 'nvim "$@"', block = true, for = "unix"}
+  ]
