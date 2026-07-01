@@ -5,3 +5,11 @@ pi/.pi/agent/sessions/
 pi/.pi/agent/bin/
 pi/.pi/agent/git/
 pi/.pi/**/*.jsonl
+
+# Zsh private/generated state
+zsh/.zsh_history
+zsh/.zsh_sessions/
+zsh/.zcompdump*
+zsh/.zshrc.bak-*
+zsh/.oh-my-zsh/
+zsh/.config/omz/**/*.zwc

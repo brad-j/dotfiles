@@ -11,6 +11,7 @@ Each top-level directory is a Stow package. The directory structure inside each 
 | `nvim` | `~/.config/nvim` | Neovim Lua config and plugin lockfile. |
 | `tmux` | `~/.config/tmux` | tmux config. |
 | `pi` | selected `~/.pi` files | Pi coding agent settings, models, trusted dirs, extensions, and themes. |
+| `zsh` | `~/.zshrc`, `~/.zprofile`, `~/.config/omz` | Zsh login/interactive config and Oh My Zsh custom aliases/functions. |
 
 ## Layout
 
@@ -20,13 +21,19 @@ Each top-level directory is a Stow package. The directory structure inside each 
 │   └── .config/nvim/
 ├── tmux/
 │   └── .config/tmux/
-└── pi/
-    └── .pi/agent/
-        ├── extensions/
-        ├── themes/
-        ├── models.json
-        ├── settings.json
-        └── trust.json
+├── pi/
+│   └── .pi/agent/
+│       ├── extensions/
+│       ├── themes/
+│       ├── models.json
+│       ├── settings.json
+│       └── trust.json
+└── zsh/
+    ├── .zprofile
+    ├── .zshrc
+    └── .config/omz/
+        ├── aliases.zsh
+        └── functions.zsh
 ```
 
 ## First-time setup
@@ -47,13 +54,13 @@ cd ~/dotfiles
 Preview what Stow will do:
 
 ```bash
-stow -nv nvim tmux pi
+stow -nv nvim tmux pi zsh
 ```
 
 Apply the symlinks:
 
 ```bash
-stow nvim tmux pi
+stow nvim tmux pi zsh
 ```
 
 ## Common commands
@@ -62,14 +69,14 @@ Restow everything after changing package contents:
 
 ```bash
 cd ~/dotfiles
-stow -R nvim tmux pi
+stow -R nvim tmux pi zsh
 ```
 
 Preview a restow without changing anything:
 
 ```bash
 cd ~/dotfiles
-stow -nvR nvim tmux pi
+stow -nvR nvim tmux pi zsh
 ```
 
 Unstow a package:
@@ -96,6 +103,9 @@ stow nvim
 ~/.pi/agent/trust.json      -> ../../dotfiles/pi/.pi/agent/trust.json
 ~/.pi/agent/extensions      -> ../../dotfiles/pi/.pi/agent/extensions
 ~/.pi/agent/themes          -> ../../dotfiles/pi/.pi/agent/themes
+~/.zshrc                    -> dotfiles/zsh/.zshrc
+~/.zprofile                 -> dotfiles/zsh/.zprofile
+~/.config/omz               -> ../dotfiles/zsh/.config/omz
 ```
 
 ## Handling Stow conflicts
@@ -138,6 +148,25 @@ Private, generated, or machine-local Pi state is intentionally not tracked:
 - `*.jsonl` session logs
 
 The repo `.gitignore` includes guards for these files so secrets and large generated session data do not get committed accidentally.
+
+## Zsh notes
+
+Tracked Zsh files:
+
+- `~/.zshrc`
+- `~/.zprofile`
+- `~/.config/omz/aliases.zsh`
+- `~/.config/omz/functions.zsh`
+
+Intentionally not tracked:
+
+- `~/.zsh_history`
+- `~/.zsh_sessions/`
+- `.zcompdump*`
+- `.zshrc.bak-*`
+- `~/.oh-my-zsh/`
+
+`~/.oh-my-zsh` is treated as installed framework code. Custom shell behavior belongs in `~/.zshrc` or `~/.config/omz/*.zsh`.
 
 ## Workflow
 
