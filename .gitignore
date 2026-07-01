@@ -1,0 +1,7 @@
+# Pi private/generated state
+pi/.pi/agent/auth.json
+pi/.pi/web-search.json
+pi/.pi/agent/sessions/
+pi/.pi/agent/bin/
+pi/.pi/agent/git/
+pi/.pi/**/*.jsonl

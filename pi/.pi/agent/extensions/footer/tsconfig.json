@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "target": "esnext",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@earendil-works/pi-coding-agent": [
+        "/Users/brad/.bun/install/global/node_modules/@earendil-works/pi-coding-agent"
+      ],
+      "@earendil-works/pi-ai": [
+        "/Users/brad/.bun/install/global/node_modules/@earendil-works/pi-ai"
+      ],
+      "@earendil-works/pi-tui": [
+        "/Users/brad/.bun/install/global/node_modules/@earendil-works/pi-tui"
+      ]
+    }
+  },
+  "include": [
+    "index.ts"
+  ]
+}
