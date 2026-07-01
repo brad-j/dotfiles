@@ -13,6 +13,7 @@ Each top-level directory is a Stow package. The directory structure inside each 
 | `pi` | selected `~/.pi` files | Pi coding agent settings, models, trusted dirs, extensions, and themes. |
 | `zsh` | `~/.zshrc`, `~/.zprofile`, `~/.config/omz` | Zsh login/interactive config and Oh My Zsh custom aliases/functions. |
 | `yazi` | `~/.config/yazi` | Yazi file manager config and theme. |
+| `kitty` | `~/.config/kitty` | Kitty terminal config, Tokyo Night theme, session helpers, and scripts. |
 
 ## Layout
 
@@ -35,10 +36,18 @@ Each top-level directory is a Stow package. The directory structure inside each 
 │   └── .config/omz/
 │       ├── aliases.zsh
 │       └── functions.zsh
-└── yazi/
-    └── .config/yazi/
-        ├── theme.toml
-        └── yazi.toml
+├── yazi/
+│   └── .config/yazi/
+│       ├── theme.toml
+│       └── yazi.toml
+└── kitty/
+    └── .config/kitty/
+        ├── current-theme.conf
+        ├── kitty.conf
+        ├── kitty-sessions/
+        └── scripts/
+            ├── kitty-list-sessions.sh
+            └── kitty-zoxide-session.sh
 ```
 
 ## First-time setup
@@ -59,13 +68,13 @@ cd ~/dotfiles
 Preview what Stow will do:
 
 ```bash
-stow -nv nvim tmux pi zsh yazi
+stow -nv nvim tmux pi zsh yazi kitty
 ```
 
 Apply the symlinks:
 
 ```bash
-stow nvim tmux pi zsh yazi
+stow nvim tmux pi zsh yazi kitty
 ```
 
 ## Common commands
@@ -74,14 +83,14 @@ Restow everything after changing package contents:
 
 ```bash
 cd ~/dotfiles
-stow -R nvim tmux pi zsh yazi
+stow -R nvim tmux pi zsh yazi kitty
 ```
 
 Preview a restow without changing anything:
 
 ```bash
 cd ~/dotfiles
-stow -nvR nvim tmux pi zsh yazi
+stow -nvR nvim tmux pi zsh yazi kitty
 ```
 
 Unstow a package:
@@ -112,6 +121,7 @@ stow nvim
 ~/.zprofile                 -> dotfiles/zsh/.zprofile
 ~/.config/omz               -> ../dotfiles/zsh/.config/omz
 ~/.config/yazi              -> ../dotfiles/yazi/.config/yazi
+~/.config/kitty             -> ../dotfiles/kitty/.config/kitty
 ```
 
 ## Handling Stow conflicts
@@ -186,6 +196,25 @@ Intentionally not tracked:
 - `~/.local/state/yazi/`
 - Homebrew cache files
 - crash reports
+
+## Kitty notes
+
+Tracked Kitty files:
+
+- `~/.config/kitty/kitty.conf`
+- `~/.config/kitty/current-theme.conf`
+- `~/.config/kitty/scripts/kitty-list-sessions.sh`
+- `~/.config/kitty/scripts/kitty-zoxide-session.sh`
+- `~/.config/kitty/kitty-sessions/` via `.gitkeep`
+
+Intentionally not tracked:
+
+- `~/Library/Caches/kitty/`
+- `~/.cache/kitty/`
+- `~/.oh-my-zsh/plugins/kitty/`
+- logs/runtime files
+
+`kitty-sessions/` is tracked as an empty directory so session helper scripts have a stable place to look for manually authored `.kitty-session` files.
 
 ## Workflow
 

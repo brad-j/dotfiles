@@ -16,3 +16,8 @@ zsh/.config/omz/**/*.zwc
 
 # Yazi generated state
 yazi/.local/state/yazi/
+
+# Kitty generated/runtime state
+kitty/.cache/kitty/
+kitty/Library/Caches/kitty/
+kitty/.config/kitty/*.log
