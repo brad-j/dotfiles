@@ -14,5 +14,5 @@
   "packages": [
     "git:github.com/mdsitton/pi-thinking-level"
   ],
-  "theme": "tokyo-night"
+  "theme": "tokyo-night-256"
 }
