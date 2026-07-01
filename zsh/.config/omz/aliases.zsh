@@ -84,51 +84,26 @@ alias weather='curl wttr.in'
 # SSH
 alias ssh='ssh -t'
 
-# tmux sessions over ssh to zedd: `zedd` is a plain shell on zedd, `hermes`
-# runs the hermes agent (installed on zedd at ~/.local/bin/hermes, which is
-# only on PATH for a login shell, so it is launched via `bash -lc`).
-#   tz             create both (if missing) and attach zedd
-#   tz zedd        create (if missing) and attach the zedd shell session
-#   tz hermes      create (if missing) and attach the hermes session
-#   tz k           kill both sessions
+# tmux session over ssh to zedd.
+#   tz      create (if missing) and attach the zedd shell session
+#   tz k    kill the zedd session
 tz() {
     emulate -L zsh
-    local target="$1"
+    local target="${1:-zedd}"
 
     if [[ "$target" == "k" ]]; then
         tmux kill-session -t zedd 2>/dev/null
-        tmux kill-session -t hermes 2>/dev/null
         return
     fi
 
-    if [[ -n "$target" && "$target" != zedd && "$target" != hermes ]]; then
-        print -u2 "tz: unknown session '$target' (expected: zedd, hermes, or k)"
+    if [[ "$target" != zedd ]]; then
+        print -u2 "tz: unknown session '$target' (expected: zedd or k)"
         return 1
     fi
 
-    local -a sessions
-    if [[ -z "$target" ]]; then
-        sessions=(zedd hermes)
-        target=zedd
-    else
-        sessions=("$target")
-    fi
-
-    local s
-    for s in $sessions; do
-        tmux has-session -t "$s" 2>/dev/null && continue
-        if [[ "$s" == hermes ]]; then
-            tmux new-session -d -s hermes "ssh -t zedd 'bash -lc hermes'"
-        else
-            tmux new-session -d -s zedd "ssh -t zedd"
-        fi
-    done
-
-    tmux attach -t "$target"
+    tmux has-session -t zedd 2>/dev/null || tmux new-session -d -s zedd "ssh -t zedd"
+    tmux attach -t zedd
 }
 
 # pi
 alias piu='pi update && pi update --extensions'
-
-# hermes
-alias h='hermes'
