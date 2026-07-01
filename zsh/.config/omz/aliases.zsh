@@ -85,13 +85,15 @@ alias weather='curl wttr.in'
 alias ssh='ssh -t'
 
 # tmux/ssh helpers for agent work on zedd.
-#   tz              create/attach the plain SSH doorway to zedd
-#   tz k            kill the local zedd doorway session
 #   tz project      create/attach ~/code/project on zedd with pi running in tmux
 #   tz ~/path       same, using the explicit remote path
+#   tz k project    kill the local SSH wrapper and remote project tmux session
+#
+# There is intentionally no plain `tz`/`tz zedd` doorway session. The only
+# remote tmux session this creates is the project session itself.
 #
 # Project mode creates two layers:
-#   local tmux:  zedd-project  -> keeps the SSH doorway stable
+#   local tmux:  zedd-project  -> keeps the SSH connection stable
 #   remote tmux: project       -> keeps pi/agents alive on zedd
 _tz_session_name() {
     emulate -L zsh
@@ -172,23 +174,35 @@ tz() {
     local current_host="${HOST%%.*}"
     [[ -z "$current_host" ]] && current_host="$(hostname -s 2>/dev/null)"
 
-    if [[ "${1:-}" == "k" ]]; then
-        tmux kill-session -t "$host" 2>/dev/null
-        return
+    if [[ $# -eq 0 ]]; then
+        print -u2 'usage: tz <project|remote-path>'
+        print -u2 '       tz k <project|remote-path>'
+        return 2
     fi
 
-    # No args preserves the old behavior: a plain tmux-backed SSH doorway.
-    if [[ $# -eq 0 || "${1:-}" == "$host" ]]; then
-        if [[ "$current_host" == "$host" ]]; then
-            tmux has-session -t "$host" 2>/dev/null || tmux new-session -d -s "$host"
-        else
-            tmux has-session -t "$host" 2>/dev/null || tmux new-session -d -s "$host" "ssh -t ${(q)host}"
-        fi
-        _tz_attach_or_switch "$host"
-        return
-    fi
-
+    local action='open'
     local target="$1"
+    if [[ "$target" == "k" || "$target" == "kill" ]]; then
+        action='kill'
+        target="${2:-}"
+        if [[ -z "$target" ]]; then
+            print -u2 'usage: tz k <project|remote-path>'
+            return 2
+        fi
+    fi
+
+    local remote_session="$(_tz_session_name "$target")"
+    local local_session="$host-$remote_session"
+
+    if [[ "$action" == "kill" ]]; then
+        tmux kill-session -t "$local_session" 2>/dev/null
+        if [[ "$current_host" == "$host" ]]; then
+            tmux kill-session -t "$remote_session" 2>/dev/null
+        else
+            command ssh -t "$host" "tmux kill-session -t ${(q)remote_session}" 2>/dev/null
+        fi
+        return
+    fi
 
     # If already on zedd, skip the SSH wrapper and go straight to remote tmux.
     if [[ "$current_host" == "$host" ]]; then
@@ -196,13 +210,11 @@ tz() {
         return
     fi
 
-    local remote_session="$(_tz_session_name "$target")"
-    local local_session="$host-$remote_session"
     local remote_project="${(qqq)target}"
     local remote_cmd="TZ_PROJECT=$remote_project zsh -ic tzr"
 
     tmux has-session -t "$local_session" 2>/dev/null || \
-        tmux new-session -d -s "$local_session" "ssh -t ${(q)host} ${(q)remote_cmd}"
+        tmux new-session -d -s "$local_session" "command ssh -t ${(q)host} ${(q)remote_cmd}"
     _tz_attach_or_switch "$local_session"
 }
 
