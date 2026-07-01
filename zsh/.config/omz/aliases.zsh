@@ -84,25 +84,102 @@ alias weather='curl wttr.in'
 # SSH
 alias ssh='ssh -t'
 
-# tmux session over ssh to zedd.
-#   tz      create (if missing) and attach the zedd shell session
-#   tz k    kill the zedd session
-tz() {
+# tmux/ssh helpers for agent work on zedd.
+#   tz              create/attach the plain SSH doorway to zedd
+#   tz k            kill the local zedd doorway session
+#   tz project      create/attach ~/code/project on zedd with pi running in tmux
+#   tz ~/path       same, using the explicit remote path
+#
+# Project mode creates two layers:
+#   local tmux:  zedd-project  -> keeps the SSH doorway stable
+#   remote tmux: project       -> keeps pi/agents alive on zedd
+_tz_session_name() {
     emulate -L zsh
-    local target="${1:-zedd}"
+    local target="${1%/}"
+    local name="${target:t}"
+    name="${name//[^A-Za-z0-9_.-]/_}"
+    print -r -- "${name:-agent}"
+}
 
-    if [[ "$target" == "k" ]]; then
-        tmux kill-session -t zedd 2>/dev/null
-        return
+# Remote side: resolve a project/path to a directory and create/attach the
+# project tmux session with pi as the initial command.
+tzr() {
+    emulate -L zsh
+
+    local target="${1:-${TZ_PROJECT:-}}"
+    if [[ -z "$target" ]]; then
+        print -u2 'tzr: expected a project name or remote path'
+        return 2
     fi
 
-    if [[ "$target" != zedd ]]; then
-        print -u2 "tz: unknown session '$target' (expected: zedd or k)"
+    local session="$(_tz_session_name "$target")"
+    local dir=''
+    local -a candidates
+
+    case "$target" in
+        /*) candidates=("$target") ;;
+        ~/*) candidates=("$HOME/${target#~/}") ;;
+        ./*|../*) candidates=("$PWD/$target") ;;
+        *) candidates=("$HOME/code/$target" "$HOME/$target" "$target") ;;
+    esac
+
+    local candidate
+    for candidate in "${candidates[@]}"; do
+        if [[ -d "$candidate" ]]; then
+            dir="${candidate:A}"
+            break
+        fi
+    done
+
+    if [[ -z "$dir" ]]; then
+        print -u2 "tzr: directory not found for '$target'"
+        print -u2 'tzr: tried:'
+        printf '  %s\n' "${candidates[@]}" >&2
         return 1
     fi
 
-    tmux has-session -t zedd 2>/dev/null || tmux new-session -d -s zedd "ssh -t zedd"
-    tmux attach -t zedd
+    exec tmux new-session -A -s "$session" -c "$dir" pi
+}
+
+tz() {
+    emulate -L zsh
+
+    local host="${TZ_HOST:-zedd}"
+    local current_host="${HOST%%.*}"
+    [[ -z "$current_host" ]] && current_host="$(hostname -s 2>/dev/null)"
+
+    if [[ "${1:-}" == "k" ]]; then
+        tmux kill-session -t "$host" 2>/dev/null
+        return
+    fi
+
+    # No args preserves the old behavior: a plain tmux-backed SSH doorway.
+    if [[ $# -eq 0 || "${1:-}" == "$host" ]]; then
+        if [[ "$current_host" == "$host" ]]; then
+            tmux new-session -A -s "$host"
+        else
+            tmux has-session -t "$host" 2>/dev/null || tmux new-session -d -s "$host" "ssh -t ${(q)host}"
+            tmux attach -t "$host"
+        fi
+        return
+    fi
+
+    local target="$1"
+
+    # If already on zedd, skip the SSH wrapper and go straight to remote tmux.
+    if [[ "$current_host" == "$host" ]]; then
+        tzr "$target"
+        return
+    fi
+
+    local remote_session="$(_tz_session_name "$target")"
+    local local_session="$host-$remote_session"
+    local remote_project="${(qqq)target}"
+    local remote_cmd="TZ_PROJECT=$remote_project zsh -ic tzr"
+
+    tmux has-session -t "$local_session" 2>/dev/null || \
+        tmux new-session -d -s "$local_session" "ssh -t ${(q)host} ${(q)remote_cmd}"
+    tmux attach -t "$local_session"
 }
 
 # pi
