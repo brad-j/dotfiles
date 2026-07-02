@@ -12,6 +12,7 @@ vim.pack.add({
     "https://github.com/stevearc/conform.nvim",
     "https://github.com/echasnovski/mini.pairs",
     "https://github.com/nvim-lualine/lualine.nvim",
+    "https://github.com/MeanderingProgrammer/render-markdown.nvim",
 })
 
 vim.api.nvim_create_autocmd("PackChanged", {
@@ -97,7 +98,7 @@ require("blink.cmp").setup({
 local ts_parsers = {
     "lua", "vim", "vimdoc",
     "typescript", "tsx", "javascript",
-    "json", "yaml",
+    "json", "yaml", "html",
     "bash", "markdown", "markdown_inline",
 }
 require("nvim-treesitter").install(ts_parsers)
@@ -126,6 +127,10 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 -- treesitter
+
+-- render-markdown
+require("render-markdown").setup({})
+-- render-markdown
 
 -- conform
 require("conform").setup({
