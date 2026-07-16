@@ -19,7 +19,6 @@ if command -v pnpm >/dev/null 2>&1; then
   alias pdl='pnpm dlx'
 fi
 command -v netlify >/dev/null 2>&1 && alias ntl='netlify'
-command -v opencode >/dev/null 2>&1 && alias oc='opencode'
 
 # Git
 alias ga='git add -A'

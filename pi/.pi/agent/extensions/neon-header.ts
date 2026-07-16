@@ -108,7 +108,14 @@ function uniqueSorted(values: string[]): string[] {
 
 function displayNameFromPath(value: string): string {
   const parsed = path.parse(value);
-  if (parsed.name === "index") return path.basename(path.dirname(value));
+  if (parsed.name === "index") {
+    const dir = path.dirname(value);
+    const base = path.basename(dir);
+    // Package entry points often live in `src/index.ts`; surface the package
+    // name (the parent dir) instead of the literal "src".
+    if (base === "src") return path.basename(path.dirname(dir));
+    return base;
+  }
   if (parsed.base === "SKILL.md") return path.basename(path.dirname(value));
   return parsed.name || parsed.base || value;
 }

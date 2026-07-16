@@ -37,7 +37,6 @@ fi
 path=(
   "$HOME/.local/bin"
   "$HOME/.pi/agent/bin"
-  "$HOME/.opencode/bin"
   "$PNPM_HOME/bin"
   "$PNPM_HOME"
   "$BUN_INSTALL/bin"
@@ -138,3 +137,6 @@ for _syntax_highlighting in \
   fi
 done
 unset _syntax_highlighting
+
+# opencode
+export PATH=/Users/brad/.opencode/bin:$PATH
