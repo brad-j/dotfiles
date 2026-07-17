@@ -219,3 +219,6 @@ tz() {
 
 # pi
 alias piu='pi update && pi update --extensions'
+
+# exe.dev
+alias exe='ssh exe.dev'

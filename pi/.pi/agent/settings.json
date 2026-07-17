@@ -1,20 +1,20 @@
 {
-    "lastChangelogVersion": "0.80.7",
-    "defaultProvider": "orcarouter",
-    "defaultModel": "openai/gpt-5.6-luna",
-    "defaultThinkingLevel": "medium",
-    "hideThinkingBlock": true,
-    "quietStartup": true,
-    "collapseChangelog": false,
-    "terminal.showImages": true,
-    "enableInstallTelemetry": true,
-    "enabledModels": [
-        "openai/gpt-5.6-luna",
-        "openai/gpt-5.6-terra",
-        "gpt-5.6-sol"
-    ],
-    "packages": [
-        "git:github.com/mdsitton/pi-thinking-level"
-    ],
-    "theme": "tokyo-night-256"
+  "lastChangelogVersion": "0.80.10",
+  "defaultProvider": "openai",
+  "defaultModel": "gpt-5.6-luna",
+  "defaultThinkingLevel": "high",
+  "hideThinkingBlock": true,
+  "quietStartup": true,
+  "collapseChangelog": false,
+  "terminal.showImages": true,
+  "enableInstallTelemetry": true,
+  "enabledModels": [
+    "openai/gpt-5.6-luna",
+    "openai/gpt-5.6-terra",
+    "gpt-5.6-sol"
+  ],
+  "packages": [
+    "git:github.com/mdsitton/pi-thinking-level"
+  ],
+  "theme": "tokyo-night-256"
 }
