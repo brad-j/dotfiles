@@ -13,7 +13,6 @@ fi
 
 path=(
   "$HOME/.local/bin"
-  "$HOME/.pi/agent/bin"
   "$HOME/bin"
   $path
 )

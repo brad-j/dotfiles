@@ -36,7 +36,6 @@ fi
 
 path=(
   "$HOME/.local/bin"
-  "$HOME/.pi/agent/bin"
   "$PNPM_HOME/bin"
   "$PNPM_HOME"
   "$BUN_INSTALL/bin"
@@ -140,3 +139,8 @@ unset _syntax_highlighting
 
 # opencode
 export PATH=/Users/brad/.opencode/bin:$PATH
+
+# pi
+
+# Tavily API key for pi-web-access
+export TAVILY_API_KEY=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
