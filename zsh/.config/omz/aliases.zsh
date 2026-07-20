@@ -220,6 +220,5 @@ tz() {
 # pi
 alias piu='pi update && pi update --extensions'
 
-# exe.dev
-alias exe='ssh exe.dev'
-alias hermes='ssh hermes-pa.exe.xyz'
+# herdr
+alias piper='herdr --remote piper'

@@ -14,6 +14,7 @@ Each top-level directory is a Stow package. The directory structure inside each 
 | `zsh` | `~/.zshrc`, `~/.zprofile`, `~/.config/omz` | Zsh login/interactive config and Oh My Zsh custom aliases/functions. |
 | `yazi` | `~/.config/yazi` | Yazi file manager config and theme. |
 | `kitty` | `~/.config/kitty` | Kitty terminal config, Tokyo Night theme, session helpers, and scripts. |
+| `herdr` | `~/.config/herdr/config.toml` | Herdr configuration; runtime state stays local. |
 
 ## Layout
 
@@ -40,14 +41,16 @@ Each top-level directory is a Stow package. The directory structure inside each 
 │   └── .config/yazi/
 │       ├── theme.toml
 │       └── yazi.toml
-└── kitty/
-    └── .config/kitty/
-        ├── current-theme.conf
-        ├── kitty.conf
-        ├── kitty-sessions/
-        └── scripts/
-            ├── kitty-list-sessions.sh
-            └── kitty-zoxide-session.sh
+├── kitty/
+│   └── .config/kitty/
+│       ├── current-theme.conf
+│       ├── kitty.conf
+│       ├── kitty-sessions/
+│       └── scripts/
+│           ├── kitty-list-sessions.sh
+│           └── kitty-zoxide-session.sh
+└── herdr/
+    └── .config/herdr/config.toml
 ```
 
 ## First-time setup
@@ -68,13 +71,13 @@ cd ~/dotfiles
 Preview what Stow will do:
 
 ```bash
-stow -nv nvim tmux pi zsh yazi kitty
+stow -nv nvim tmux pi zsh yazi kitty herdr
 ```
 
 Apply the symlinks:
 
 ```bash
-stow nvim tmux pi zsh yazi kitty
+stow nvim tmux pi zsh yazi kitty herdr
 ```
 
 ## Common commands
@@ -83,14 +86,14 @@ Restow everything after changing package contents:
 
 ```bash
 cd ~/dotfiles
-stow -R nvim tmux pi zsh yazi kitty
+stow -R nvim tmux pi zsh yazi kitty herdr
 ```
 
 Preview a restow without changing anything:
 
 ```bash
 cd ~/dotfiles
-stow -nvR nvim tmux pi zsh yazi kitty
+stow -nvR nvim tmux pi zsh yazi kitty herdr
 ```
 
 Unstow a package:
@@ -122,6 +125,7 @@ stow nvim
 ~/.config/omz               -> ../dotfiles/zsh/.config/omz
 ~/.config/yazi              -> ../dotfiles/yazi/.config/yazi
 ~/.config/kitty             -> ../dotfiles/kitty/.config/kitty
+~/.config/herdr/config.toml -> ../../dotfiles/herdr/.config/herdr/config.toml
 ```
 
 ## Handling Stow conflicts
@@ -215,6 +219,10 @@ Intentionally not tracked:
 - logs/runtime files
 
 `kitty-sessions/` is tracked as an empty directory so session helper scripts have a stable place to look for manually authored `.kitty-session` files.
+
+## Herdr notes
+
+Only `~/.config/herdr/config.toml` is tracked. Session data, release notes, logs, and sockets in `~/.config/herdr/` remain machine-local.
 
 ## Workflow
 
