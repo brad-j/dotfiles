@@ -45,7 +45,14 @@ path=(
 )
 export PATH
 
-# Node via fnm on Linux/this box; fall back to nvm for the Mac.
+# Tool versions managed by mise when available.
+if [[ -x "$HOME/.local/bin/mise" ]]; then
+  eval "$("$HOME/.local/bin/mise" activate zsh)"
+elif command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
+
+# Node via fnm when mise is not providing it; fall back to nvm for the Mac.
 FNM_PATH="${FNM_PATH:-$HOME/.local/share/fnm}"
 if [[ -x "$FNM_PATH/fnm" ]]; then
   path=("$FNM_PATH" $path)
