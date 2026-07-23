@@ -143,4 +143,4 @@ export PATH=/Users/brad/.opencode/bin:$PATH
 # pi
 
 # Tavily API key for pi-web-access
-export TAVILY_API_KEY=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
+# export TAVILY_API_KEY=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
