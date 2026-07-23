@@ -137,10 +137,6 @@ for _syntax_highlighting in \
 done
 unset _syntax_highlighting
 
-# opencode
-export PATH=/Users/brad/.opencode/bin:$PATH
-
-# pi
-
-# Tavily API key for pi-web-access
-# export TAVILY_API_KEY=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
+# Optional user-local tools.
+[[ -d "$HOME/.opencode/bin" ]] && path=("$HOME/.opencode/bin" $path)
+export PATH

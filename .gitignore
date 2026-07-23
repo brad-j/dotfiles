@@ -4,6 +4,11 @@ pi/.pi/web-search.json
 pi/.pi/agent/sessions/
 pi/.pi/agent/bin/
 pi/.pi/agent/git/
+pi/.pi/agent/npm/
+pi/.pi/agent/cache/
+pi/.pi/agent/epimetheus/
+pi/.pi/agent/models-store.json
+pi/.pi/agent/trust.json
 pi/.pi/**/*.jsonl
 
 # Zsh private/generated state

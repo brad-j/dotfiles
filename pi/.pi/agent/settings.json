@@ -1,0 +1,26 @@
+{
+  "lastChangelogVersion": "0.81.1",
+  "theme": "tokyo-night",
+  "packages": [
+    "npm:@tavily/pi-extension",
+    "npm:pi-powerline-footer",
+    "npm:@heyhuynhgiabuu/pi-pretty",
+    "npm:@noctuid/epimetheus@0.6.0"
+  ],
+  "defaultModel": "gpt-5.6-sol",
+  "enabledModels": [
+    "gpt-5.6-sol",
+    "gpt-5.6-luna",
+    "glm-5.2",
+    "deepseek-v4-pro"
+  ],
+  "defaultThinkingLevel": "high",
+  "hideThinkingBlock": true,
+  "defaultProvider": "openai-codex",
+  "showCacheMissNotices": true,
+  "quietStartup": true,
+  "workingVibe": "wheel of time",
+  "powerline": {
+    "fixedEditor": true
+  }
+}
