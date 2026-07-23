@@ -144,6 +144,9 @@ for _syntax_highlighting in \
 done
 unset _syntax_highlighting
 
+# Machine-local secrets. This file must never be tracked by dotfiles.
+[[ -r "$HOME/.config/secrets/env.zsh" ]] && source "$HOME/.config/secrets/env.zsh"
+
 # Optional user-local tools.
 [[ -d "$HOME/.opencode/bin" ]] && path=("$HOME/.opencode/bin" $path)
 export PATH

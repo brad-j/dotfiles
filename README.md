@@ -65,6 +65,13 @@ Never commit:
 
 Pi's portable files are tracked under `pi/.pi/agent`. `auth.json`, `epimetheus/`, `sessions/`, `npm/`, caches, trust decisions, and generated model state remain machine-local.
 
+Interactive shell API keys belong in `~/.config/secrets/env.zsh`, with directory mode `700` and file mode `600`. The tracked `.zshrc` sources it when present. Keep the authoritative copy in a password manager.
+
+```bash
+install -d -m 700 ~/.config/secrets
+install -m 600 /dev/null ~/.config/secrets/env.zsh
+```
+
 ## Conflicts
 
 Always run `stow -nv` first. If a real target file already exists, compare and back it up before removing it. Do not use `stow --adopt` without reviewing the resulting repository diff.
