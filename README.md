@@ -14,7 +14,6 @@ Each top-level directory is a Stow package whose contents mirror `$HOME`.
 | `nvim` | `~/.config/nvim` | Only with a compatible current Neovim |
 | `yazi` | `~/.config/yazi` | If Yazi is installed |
 | `kitty` | `~/.config/kitty` | Desktop machines only |
-| `herdr` | `~/.config/herdr/config.toml` | If Herdr is installed |
 
 ## Install
 

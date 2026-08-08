@@ -28,6 +28,7 @@ alias gs='git status'
 
 # eza
 if command -v eza >/dev/null 2>&1; then
+  alias l='eza -l --color=always --icons=always --no-user --no-time --binary'
   alias ll='eza -la --color=always --icons=always --no-user --no-time --binary'
   alias lt='eza -T --color=always --icons=always --no-user --no-time'
 fi
@@ -219,7 +220,4 @@ tz() {
 
 # pi
 alias piu='pi update && pi update --extensions'
-
-# herdr
-alias piper='herdr --remote piper'
 

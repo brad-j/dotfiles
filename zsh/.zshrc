@@ -102,18 +102,14 @@ fi
 [[ -s "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"
 
 # zsh-autosuggestions.
-# Make one Tab accept the gray suggestion while preserving the current Tab widget.
-# fzf's shell integration rebinds Tab to fzf-completion when a real TTY is attached,
-# so include both OMZ's and fzf's Tab widgets in the autosuggestion accept list.
+# Accept gray suggestions with cursor/end-of-line widgets only; keep Tab reserved
+# for normal filesystem and command completion.
 ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
   forward-char
   end-of-line
   vi-forward-char
   vi-end-of-line
   vi-add-eol
-  expand-or-complete
-  expand-or-complete-with-dots
-  fzf-completion
 )
 for _autosuggestions in \
   /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
