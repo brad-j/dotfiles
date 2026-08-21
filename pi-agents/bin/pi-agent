@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""Launch and validate purpose-built Pi agents."""
+
+from __future__ import annotations
+
+import json
+import os
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parent.parent
+REGISTRY_PATH = ROOT / "agents.json"
+
+
+def load_registry() -> dict[str, dict[str, object]]:
+    with REGISTRY_PATH.open(encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def expand_path(value: str) -> Path:
+    return Path(os.path.expandvars(os.path.expanduser(value))).resolve()
+
+
+def package_path(name: str) -> Path:
+    return (ROOT / name).resolve()
+
+
+def package_sources(settings: dict[str, object]) -> set[Path]:
+    sources: set[Path] = set()
+    for entry in settings.get("packages", []):
+        source = entry if isinstance(entry, str) else entry.get("source") if isinstance(entry, dict) else None
+        if not isinstance(source, str) or source.startswith(("npm:", "git:", "http://", "https://", "ssh://")):
+            continue
+        sources.add(expand_path(source))
+    return sources
+
+
+def validate(name: str, config: dict[str, object]) -> list[str]:
+    errors: list[str] = []
+    agent_dir = expand_path(str(config["agentDir"]))
+    settings_path = agent_dir / "settings.json"
+
+    if not agent_dir.is_dir():
+        return [f"agent directory missing: {agent_dir}"]
+    instructions = (ROOT / str(config["instructions"])).resolve()
+    runtime_instructions = agent_dir / "AGENTS.md"
+    if not instructions.is_file():
+        errors.append(f"canonical instructions missing: {instructions}")
+    if not runtime_instructions.is_file():
+        errors.append(f"runtime instructions missing: {runtime_instructions}")
+    elif runtime_instructions.resolve() != instructions:
+        errors.append(f"runtime instructions do not link to canonical source: {runtime_instructions}")
+    if not settings_path.is_file():
+        errors.append(f"settings missing: {settings_path}")
+        return errors
+
+    try:
+        with settings_path.open(encoding="utf-8") as handle:
+            settings = json.load(handle)
+    except (OSError, json.JSONDecodeError) as error:
+        errors.append(f"invalid settings {settings_path}: {error}")
+        return errors
+
+    configured_sources = package_sources(settings)
+    for package_name in config.get("packages", []):
+        expected = package_path(str(package_name))
+        if not (expected / "package.json").is_file():
+            errors.append(f"package missing: {expected}")
+        if expected not in configured_sources:
+            errors.append(f"package not configured in {settings_path}: {expected}")
+
+    auth_path = agent_dir / "auth.json"
+    if not auth_path.exists():
+        errors.append(f"model credentials missing: {auth_path}")
+    return errors
+
+
+def doctor(registry: dict[str, dict[str, object]], names: list[str]) -> int:
+    failures = 0
+    for name in names:
+        config = registry.get(name)
+        if config is None:
+            print(f"unknown agent: {name}", file=sys.stderr)
+            failures += 1
+            continue
+        errors = validate(name, config)
+        if errors:
+            failures += 1
+            print(f"{name}: FAIL")
+            for error in errors:
+                print(f"  - {error}")
+        else:
+            print(f"{name}: ok")
+    return 1 if failures else 0
+
+
+def usage(registry: dict[str, dict[str, object]]) -> None:
+    names = " | ".join(registry)
+    print(f"usage: pi-agent <{names}> [pi arguments...]\n       pi-agent doctor [agent]\n       pi-agent --list")
+
+
+def main() -> int:
+    registry = load_registry()
+    args = sys.argv[1:]
+    if not args or args[0] in {"-h", "--help"}:
+        usage(registry)
+        return 0
+    if args[0] == "--list":
+        for name, config in registry.items():
+            print(f"{name}\t{config['displayName']}")
+        return 0
+    if args[0] == "doctor":
+        names = args[1:] or list(registry)
+        return doctor(registry, names)
+
+    name = args[0]
+    config = registry.get(name)
+    if config is None:
+        print(f"unknown agent: {name}", file=sys.stderr)
+        usage(registry)
+        return 2
+
+    errors = validate(name, config)
+    if errors:
+        print(f"pi-agent: {name} failed validation", file=sys.stderr)
+        for error in errors:
+            print(f"  - {error}", file=sys.stderr)
+        return 1
+
+    agent_dir = expand_path(str(config["agentDir"]))
+    os.environ["PI_AGENT_PROFILE"] = name
+    os.environ["PI_CODING_AGENT_DIR"] = str(agent_dir)
+
+    cwd_env = config.get("cwdEnv")
+    configured_cwd = os.environ.get(str(cwd_env)) if cwd_env else None
+    default_cwd = configured_cwd or config.get("defaultCwd")
+    if default_cwd:
+        cwd = expand_path(str(default_cwd))
+        if not cwd.is_dir():
+            print(f"pi-agent: working directory missing: {cwd}", file=sys.stderr)
+            return 1
+        os.chdir(cwd)
+
+    os.execvp("pi", ["pi", *args[1:]])
+    return 127
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

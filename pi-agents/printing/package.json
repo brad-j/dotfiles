@@ -1,0 +1,10 @@
+{
+  "name": "brad-pi-printing-agent",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "keywords": ["pi-package"],
+  "pi": {
+    "skills": ["./skills"]
+  }
+}

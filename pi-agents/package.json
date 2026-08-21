@@ -1,0 +1,17 @@
+{
+  "name": "brad-pi-agents",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit && python3 -m json.tool agents.json >/dev/null && ./bin/pi-agent doctor"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "0.84.2",
+    "@earendil-works/pi-tui": "0.84.2",
+    "@types/node": "26.2.0",
+    "typescript": "7.0.2"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": ["@google/genai", "protobufjs"]
+  }
+}

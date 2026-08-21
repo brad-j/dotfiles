@@ -15,6 +15,20 @@ Each top-level directory is a Stow package whose contents mirror `$HOME`.
 | `yazi` | `~/.config/yazi` | If Yazi is installed |
 | `kitty` | `~/.config/kitty` | Desktop machines only |
 
+## Purpose-built Pi agents
+
+`pi-agents/` contains the version-controlled definitions for the coding, 3D-printing, and Proxmox agents. These are application definitions rather than a Stow package: `pi-agent` selects an isolated runtime root through `PI_CODING_AGENT_DIR`, while local Pi packages provide shared platform behavior and domain-specific capabilities.
+
+```bash
+pi-agent --list
+pi-agent doctor
+pi-code
+pi-print
+pi-proxmox
+```
+
+Install development dependencies with `pnpm install` from `pi-agents/`. Runtime sessions, credentials, caches, generated model state, and installed user packages remain under `~/.pi` and are not tracked.
+
 ## Install
 
 Clone into the home directory:

@@ -10,6 +10,7 @@ pi/.pi/agent/epimetheus/
 pi/.pi/agent/models-store.json
 pi/.pi/agent/trust.json
 pi/.pi/**/*.jsonl
+pi-agents/node_modules/
 
 # Zsh private/generated state
 zsh/.zsh_history

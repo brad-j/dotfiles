@@ -1,0 +1,22 @@
+{
+  "code": {
+    "displayName": "Coding Agent",
+    "agentDir": "~/.pi/agent",
+    "instructions": "profiles/code/AGENTS.md",
+    "packages": ["platform"]
+  },
+  "printing": {
+    "displayName": "3D Printing Agent",
+    "agentDir": "~/.pi/agents/printing",
+    "instructions": "profiles/printing/AGENTS.md",
+    "packages": ["platform", "printing"]
+  },
+  "proxmox": {
+    "displayName": "Proxmox Agent",
+    "agentDir": "~/.pi/agents/proxmox",
+    "instructions": "profiles/proxmox/AGENTS.md",
+    "defaultCwd": "~/omega/Code/homelab",
+    "cwdEnv": "PI_PROXMOX_CWD",
+    "packages": ["platform", "proxmox"]
+  }
+}
