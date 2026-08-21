@@ -1,6 +1,9 @@
 # ~/.config/omz/aliases.zsh
 # Sourced by Oh My Zsh via ZSH_CUSTOM. Keep aliases here; heavier logic in functions.zsh.
 
+# pi
+alias pi='pi-code'
+
 # Kitty
 alias zedd='kitty --session ~/.config/kitty/kitty-sessions/zedd.kitty-session'
 command -v kitty >/dev/null 2>&1 && alias code='kitty --session ~/.config/kitty/kitty-sessions/code.kitty-session'
