@@ -39,3 +39,4 @@
 - Explain important assumptions and tradeoffs.
 - Mention changed file paths in the final response.
 - Call out unresolved risks, failed checks, and follow-up work clearly.
+- After completing a substantive implementation milestone, stop before starting adjacent work. Give a brief plain-English summary and one concrete thing the user can verify. Continue to another milestone only when the user requests it.

@@ -10,6 +10,9 @@ Make Pi better at bounded execution, task closure, and recurring review without 
 - Use a Pi scheduling extension only for bounded, in-session waits such as deployment or CI polling.
 - Use prompt templates for repeatable manual workflows.
 - Use lifecycle extensions for context, scope, and handoff reminders.
+- Use lightweight milestone summaries and a concrete manual check instead of mandatory confirmation gates.
+- Use `/close` for routine self-review; defer an independent `/review` workflow until released or higher-risk work justifies it.
+- Prefer human-turn and context reminders over a raw tool-call counter.
 - Keep scheduled reviews read-only and isolate their sessions from interactive work.
 - Keep runtime settings, sessions, credentials, and generated state outside this repository.
 
@@ -38,6 +41,11 @@ Make Pi better at bounded execution, task closure, and recurring review without 
   - Initial use case: bounded deployment or CI polling.
   - Prefer prompt/notification actions.
   - Do not enable arbitrary scheduled shell execution without a strict allowlist.
+- [x] **7. Improve completion and handoff ergonomics**
+  - Stop after a substantive implementation milestone instead of silently beginning adjacent work.
+  - End with a short plain-English summary and one concrete thing Brad can verify.
+  - Include a five-bullet `For Brad` summary at the top of handoff documents.
+  - Report the blocked operation, target, and matching rule when the protected-path gate intervenes.
 
 ## Prompt template responsibilities
 
@@ -55,7 +63,7 @@ Summarize completed work, validation, current blockers, and the next coherent mi
 
 ### `/close`
 
-Re-read the objective, inspect changes, run relevant checks, verify user-facing behavior, clean temporary work, record unresolved risks, and stop before beginning another milestone.
+Re-read the objective, inspect changes, run relevant checks, verify user-facing behavior, clean temporary work, record unresolved risks, give Brad one concrete manual check, and stop before beginning another milestone.
 
 ### Weekly review
 

@@ -19,4 +19,5 @@ Do not start another milestone. Finish with a concise statement of:
 - whether the task is complete
 - what changed
 - validation performed and its result
+- one concrete thing I can verify myself
 - unresolved risks or follow-up work

@@ -6,6 +6,7 @@ import test from "node:test";
 import {
   classifyProtectedCommand,
   classifyProtectedPath,
+  matchProtectedCommand,
 } from "../lib/protected-paths.ts";
 
 const cwd = "/work/project";
@@ -36,6 +37,25 @@ test("blocks shell commands that mention protected paths", () => {
   assert.equal(classifyProtectedCommand("rg credential-handling src", cwd), undefined);
 });
 
+test("identifies the target that caused a shell command to be blocked", () => {
+  assert.deepEqual(matchProtectedCommand("cat ~/.pi/agent/auth.json", cwd), {
+    kind: "agent authentication",
+    target: "auth.json",
+  });
+  assert.deepEqual(matchProtectedCommand("python -c 'open(\".env.local\")'", cwd), {
+    kind: "environment or credential file",
+    target: ".env.local",
+  });
+  assert.deepEqual(matchProtectedCommand("cp ~/.ssh/id_ed25519 /tmp/key", cwd), {
+    kind: "private key material",
+    target: "id_ed25519",
+  });
+});
+
 test("blocks every shell command when the working directory is protected", () => {
   assert.equal(classifyProtectedCommand("ls", "/Users/example/.ssh"), "private key material");
+  assert.deepEqual(matchProtectedCommand("ls", "/Users/example/.ssh"), {
+    kind: "private key material",
+    target: "/Users/example/.ssh",
+  });
 });

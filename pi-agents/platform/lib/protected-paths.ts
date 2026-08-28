@@ -8,6 +8,11 @@ export type ProtectedPathKind =
   | "environment or credential file"
   | "private key material";
 
+export type ProtectedCommandMatch = {
+  kind: ProtectedPathKind;
+  target: string;
+};
+
 const CREDENTIAL_FILES = new Set([
   ".netrc",
   ".npmrc",
@@ -97,23 +102,55 @@ export function classifyProtectedPath(path: string, cwd: string): ProtectedPathK
   return undefined;
 }
 
-const PROTECTED_COMMAND_PATTERNS: ReadonlyArray<readonly [RegExp, ProtectedPathKind]> = [
-  [/(?:^|[\s'"=/:])auth\.json(?:$|[\s'";&|/])/i, "agent authentication"],
-  [/(?:^|[\s'"=/:])cloak\.json(?:$|[\s'";&|/])/i, "Cloak configuration"],
-  [/(?:^|[\s'"=/:])\.env(?:rc|\.[a-z0-9_.-]+)?(?:$|[\s'";&|/])/i, "environment or credential file"],
-  [/(?:^|[\s'"=/:])(?:\.?(?:credentials)(?:\.(?:json|toml|ya?ml))?|application_default_credentials\.json|\.netrc|\.npmrc|\.pypirc|kubeconfig|secrets\.(?:json|toml|ya?ml))(?:$|[\s'";&|/])/i, "environment or credential file"],
-  [/(?:^|[\s'"=/:])(?:\.ssh|\.gnupg|private[-_]keys)(?:$|[\s'";&|/])/i, "private key material"],
-  [/(?:^|[\s'"=/:])\.pki\/private(?:$|[\s'";&|/])/i, "private key material"],
-  [/(?:^|[\s'"=/:])(?:id_(?:dsa|ecdsa|ed25519|rsa)|[^\s'";&|/]+\.(?:key|p12|pfx|pem))(?:$|[\s'";&|/])/i, "private key material"],
+const PROTECTED_COMMAND_PATTERNS: ReadonlyArray<{
+  pattern: RegExp;
+  kind: ProtectedPathKind;
+}> = [
+  {
+    pattern: /(?:^|[\s'"=/:])(?<target>auth\.json)(?=$|[\s'";&|/])/i,
+    kind: "agent authentication",
+  },
+  {
+    pattern: /(?:^|[\s'"=/:])(?<target>cloak\.json)(?=$|[\s'";&|/])/i,
+    kind: "Cloak configuration",
+  },
+  {
+    pattern: /(?:^|[\s'"=/:])(?<target>\.env(?:rc|\.[a-z0-9_.-]+)?)(?=$|[\s'";&|/])/i,
+    kind: "environment or credential file",
+  },
+  {
+    pattern: /(?:^|[\s'"=/:])(?<target>\.?(?:credentials)(?:\.(?:json|toml|ya?ml))?|application_default_credentials\.json|\.netrc|\.npmrc|\.pypirc|kubeconfig|secrets\.(?:json|toml|ya?ml))(?=$|[\s'";&|/])/i,
+    kind: "environment or credential file",
+  },
+  {
+    pattern: /(?:^|[\s'"=/:])(?<target>\.pki\/private)(?=$|[\s'";&|/])/i,
+    kind: "private key material",
+  },
+  {
+    pattern: /(?:^|[\s'"=/:])(?<target>id_(?:dsa|ecdsa|ed25519|rsa)|[^\s'";&|/]+\.(?:key|p12|pfx|pem))(?=$|[\s'";&|/])/i,
+    kind: "private key material",
+  },
+  {
+    pattern: /(?:^|[\s'"=/:])(?<target>\.ssh|\.gnupg|private[-_]keys)(?=$|[\s'";&|/])/i,
+    kind: "private key material",
+  },
 ];
 
-export function classifyProtectedCommand(command: string, cwd: string): ProtectedPathKind | undefined {
+export function matchProtectedCommand(
+  command: string,
+  cwd: string,
+): ProtectedCommandMatch | undefined {
   const cwdKind = classifyProtectedPath(cwd, cwd);
-  if (cwdKind) return cwdKind;
+  if (cwdKind) return { kind: cwdKind, target: cwd };
 
-  for (const [pattern, kind] of PROTECTED_COMMAND_PATTERNS) {
-    if (pattern.test(command)) return kind;
+  for (const { pattern, kind } of PROTECTED_COMMAND_PATTERNS) {
+    const target = pattern.exec(command)?.groups?.target;
+    if (target) return { kind, target };
   }
 
   return undefined;
+}
+
+export function classifyProtectedCommand(command: string, cwd: string): ProtectedPathKind | undefined {
+  return matchProtectedCommand(command, cwd)?.kind;
 }

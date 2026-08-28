@@ -8,7 +8,15 @@ disable-model-invocation: true
 
 Write a concise but complete handoff document to the exact absolute path supplied by the user. Create its parent directory if necessary. Do not choose a different path.
 
-Include:
+Begin with a `## For Brad` section containing five short, plain-English bullets:
+
+- Goal and current phase.
+- What is complete.
+- Current state.
+- Any decision needed from Brad, or `None`.
+- The exact next step.
+
+Then include the detailed agent-facing handoff:
 
 - The original goal and current phase.
 - User constraints and preferences.
