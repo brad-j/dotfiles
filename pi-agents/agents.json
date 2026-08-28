@@ -5,11 +5,11 @@
     "instructions": "profiles/code/AGENTS.md",
     "packages": ["platform"]
   },
-  "printing": {
-    "displayName": "3D Printing Agent",
-    "agentDir": "~/.pi/agents/printing",
-    "instructions": "profiles/printing/AGENTS.md",
-    "packages": ["platform", "printing"]
+  "print": {
+    "displayName": "3D Print Agent",
+    "agentDir": "~/.pi/agents/print",
+    "instructions": "profiles/print/AGENTS.md",
+    "packages": ["platform", "print"]
   },
   "proxmox": {
     "displayName": "Proxmox Agent",

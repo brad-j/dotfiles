@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "tsc --noEmit && python3 -m json.tool agents.json >/dev/null && ./bin/pi-agent doctor"
+    "check": "pnpm test && tsc --noEmit && python3 -m json.tool agents.json >/dev/null && ./bin/pi-agent doctor",
+    "test": "node --test platform/test/*.test.ts"
   },
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "0.84.2",

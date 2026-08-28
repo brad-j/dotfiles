@@ -1,2 +1,2 @@
 #!/bin/sh
-exec pi-agent printing "$@"
+exec pi-agent print "$@"

@@ -1,4 +1,4 @@
-import type { ExtensionAPI, Theme } from "@earendil-works/pi-coding-agent";
+import { CustomEditor, type ExtensionAPI, type Theme } from "@earendil-works/pi-coding-agent";
 import { visibleWidth } from "@earendil-works/pi-tui";
 
 const GLYPHS: Record<string, readonly string[]> = {
@@ -18,20 +18,20 @@ const GLYPHS: Record<string, readonly string[]> = {
 
 type HeaderColor = "accent" | "success" | "warning";
 
-type Profile = {
+export type AgentProfile = {
     title: string;
     subtitle: string;
     color: HeaderColor;
 };
 
-const PROFILES: Record<string, Profile> = {
+const PROFILES: Record<string, AgentProfile> = {
     code: {
         title: "CODE",
         subtitle: "GENERAL SOFTWARE DEVELOPMENT",
         color: "accent",
     },
-    printing: {
-        title: "PRINTING",
+    print: {
+        title: "PRINT",
         subtitle: "CAD · SLICING · PRINTABILITY",
         color: "success",
     },
@@ -48,7 +48,12 @@ function renderBanner(title: string): string[] {
     );
 }
 
-function buildHeader(profile: Profile, theme: Theme, width: number): string[] {
+export function getActiveAgentProfile(): AgentProfile | undefined {
+    const profileName = process.env.PI_AGENT_PROFILE;
+    return profileName ? PROFILES[profileName] : undefined;
+}
+
+function buildHeader(profile: AgentProfile, theme: Theme, width: number): string[] {
     const banner = renderBanner(profile.title);
     const bannerWidth = Math.max(...banner.map(visibleWidth));
     const subtitle = theme.fg("muted", profile.subtitle);
@@ -76,11 +81,15 @@ export default function registerAgentHeader(pi: ExtensionAPI): void {
     pi.on("session_start", (_event, ctx) => {
         if (ctx.mode !== "tui") return;
 
-        const profileName = process.env.PI_AGENT_PROFILE;
-        const profile = profileName ? PROFILES[profileName] : undefined;
+        const profile = getActiveAgentProfile();
         if (!profile) return;
 
         ctx.ui.setTitle(`${profile.title} · Pi`);
+        ctx.ui.setEditorComponent((tui, editorTheme, keybindings) => {
+            const editor = new CustomEditor(tui, editorTheme, keybindings);
+            editor.borderColor = (text) => ctx.ui.theme.fg(profile.color, text);
+            return editor;
+        });
         ctx.ui.setHeader((_tui, theme) => ({
             invalidate() { },
             render(width: number): string[] {

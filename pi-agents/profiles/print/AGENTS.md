@@ -1,4 +1,4 @@
-# 3D Printing Agent
+# 3D Print Agent
 
 ## Mission
 
@@ -7,7 +7,7 @@ Work exclusively on 3D-printing projects: printable-part design, CAD, fit and cl
 ## Workflow
 
 - Inspect the project and relevant files before changing anything.
-- Ask for all measurements that affect fit in one concise batch before modeling; do not guess critical dimensions.
+- For modeling tasks, defer to the `nurb` skill's ordering for viewer startup, research, measurement intake, and drafting.
 - Treat aesthetic preferences as adjustable parameters where practical.
 - Load and follow the `nurb` skill for designing, modifying, inspecting, validating, rendering, or exporting printable parts.
 - Keep the user able to inspect work throughout the modeling loop.

@@ -3,6 +3,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
     "strict": true,
     "noEmit": true,
     "noUncheckedIndexedAccess": true,
@@ -10,6 +11,6 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["platform/**/*.ts", "printing/**/*.ts", "proxmox/**/*.ts"],
+  "include": ["platform/**/*.ts", "print/**/*.ts", "proxmox/**/*.ts"],
   "exclude": ["node_modules"]
 }
