@@ -4,3 +4,16 @@ font-size = 15.5
 
 cursor-style = block
 cursor-color = 89F336
+
+# Tab navigation
+keybind = cmd+1=goto_tab:1
+keybind = cmd+2=goto_tab:2
+keybind = cmd+3=goto_tab:3
+keybind = cmd+4=goto_tab:4
+keybind = cmd+t=new_tab
+keybind = cmd+k=next_tab
+keybind = cmd+h=previous_tab
+keybind = cmd+shift+k=move_tab:1
+
+# Configuration
+keybind = ctrl+cmd+comma=reload_config

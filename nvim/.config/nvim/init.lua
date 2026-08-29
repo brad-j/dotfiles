@@ -15,4 +15,5 @@ require("commands")
 require("pack")
 require("lsp")
 
-vim.cmd.colorscheme("tokyonight-night")
+require("ghostty-default-style-dark").setup({})
+vim.cmd.colorscheme("ghostty-default-style-dark")

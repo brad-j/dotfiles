@@ -1,5 +1,5 @@
 vim.pack.add({
-    "https://github.com/folke/tokyonight.nvim",
+    "https://github.com/nkxxll/ghostty-default-style-dark.nvim",
     "https://github.com/dmtrKovalenko/fff.nvim",
     "https://github.com/stevearc/oil.nvim",
     "https://github.com/Saghen/blink.lib",
@@ -167,7 +167,7 @@ require("mini.pairs").setup()
 -- lualine
 require("lualine").setup({
     options = {
-        theme = "tokyonight",
+        theme = "ghostty-default-style-dark",
         globalstatus = true,
         icons_enabled = false,
         component_separators = { left = "|", right = "|" },
