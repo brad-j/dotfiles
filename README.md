@@ -14,6 +14,7 @@ Each top-level directory is a Stow package whose contents mirror `$HOME`.
 | `nvim` | `~/.config/nvim` | Only with a compatible current Neovim |
 | `yazi` | `~/.config/yazi` | If Yazi is installed |
 | `kitty` | `~/.config/kitty` | Desktop machines only |
+| `ghostty` | `~/.config/ghostty` | Desktop machines only |
 
 ## Purpose-built Pi agents
 

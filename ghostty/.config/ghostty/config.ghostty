@@ -1,0 +1,6 @@
+# Ghostty configuration
+font-family = Atkinson Hyperlegible Mono
+font-size = 15.5
+
+cursor-style = block
+cursor-color = 89F336
