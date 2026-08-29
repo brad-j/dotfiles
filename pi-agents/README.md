@@ -1,8 +1,9 @@
 # Purpose-built Pi agents
 
-These packages define three independent agents built on Pi:
+These packages define four independent agents built on Pi:
 
 - `code` — general software development
+- `everyday` — personal research, comparisons, planning, and writing
 - `print` — CAD, slicing, printability, and 3D-printing workflows
 - `proxmox` — guarded Proxmox and homelab operations
 
@@ -14,11 +15,12 @@ Each agent has its own `PI_CODING_AGENT_DIR`, instructions, settings, sessions, 
 pi-agent --list
 pi-agent doctor
 pi-agent code
+pi-agent everyday
 pi-agent print
 pi-agent proxmox
 ```
 
-Compatibility commands `pi-code`, `pi-print`, and `pi-proxmox` delegate to `pi-agent`.
+Compatibility commands `pi-code`, `pi-everyday`, `pi-print`, and `pi-proxmox` delegate to `pi-agent`.
 
 ## Resource ownership
 

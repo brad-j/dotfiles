@@ -5,6 +5,14 @@
     "instructions": "profiles/code/AGENTS.md",
     "packages": ["platform"]
   },
+  "everyday": {
+    "displayName": "Everyday Agent",
+    "agentDir": "~/.pi/agents/everyday",
+    "instructions": "profiles/everyday/AGENTS.md",
+    "defaultCwd": "~",
+    "cwdEnv": "PI_EVERYDAY_CWD",
+    "packages": ["platform"]
+  },
   "print": {
     "displayName": "3D Print Agent",
     "agentDir": "~/.pi/agents/print",

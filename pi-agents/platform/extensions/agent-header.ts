@@ -2,6 +2,7 @@ import { CustomEditor, type ExtensionAPI, type Theme } from "@earendil-works/pi-
 import { visibleWidth } from "@earendil-works/pi-tui";
 
 const GLYPHS: Record<string, readonly string[]> = {
+    A: [" ██ ", "█  █", "████", "█  █", "█  █"],
     C: ["████", "█   ", "█   ", "█   ", "████"],
     D: ["███ ", "█  █", "█  █", "█  █", "███ "],
     E: ["████", "█   ", "███ ", "█   ", "████"],
@@ -13,7 +14,9 @@ const GLYPHS: Record<string, readonly string[]> = {
     P: ["████", "█  █", "████", "█   ", "█   "],
     R: ["████", "█  █", "████", "█ █ ", "█  █"],
     T: ["█████", "  █  ", "  █  ", "  █  ", "  █  "],
+    V: ["█  █", "█  █", "█  █", "█  █", " ██ "],
     X: ["█  █", "█  █", " ██ ", "█  █", "█  █"],
+    Y: ["█  █", "█  █", " ██ ", " ██ ", " ██ "],
 };
 
 type HeaderColor = "accent" | "success" | "warning";
@@ -28,6 +31,11 @@ const PROFILES: Record<string, AgentProfile> = {
     code: {
         title: "CODE",
         subtitle: "GENERAL SOFTWARE DEVELOPMENT",
+        color: "accent",
+    },
+    everyday: {
+        title: "EVERYDAY",
+        subtitle: "RESEARCH · COMPARISONS · PLANNING",
         color: "accent",
     },
     print: {
