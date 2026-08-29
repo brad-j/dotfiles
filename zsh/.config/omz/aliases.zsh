@@ -3,6 +3,9 @@
 
 # pi
 alias pi='pi-code'
+alias pp='pi-print'
+alias pe='pi-everyday'
+alias pr='pi-proxmox'
 
 # Kitty
 alias zedd='kitty --session ~/.config/kitty/kitty-sessions/zedd.kitty-session'
