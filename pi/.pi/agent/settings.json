@@ -6,10 +6,10 @@
   "defaultThinkingLevel": "high",
   "tuiMode": "fullscreen",
   "packages": [
-    "/Users/brad/dotfiles/pi-agents/platform",
+    "~/dotfiles/pi-agents/platform",
     "npm:pi-web-access@0.24.0",
     "npm:@nicknisi/pi-cloak@0.1.2",
-    "/Users/brad/omega/Code/artifact-hub"
+    "~/omega/Code/artifact-hub"
   ],
   "hideThinkingBlock": true
 }
