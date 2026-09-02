@@ -161,7 +161,26 @@ end, { desc = "Format buffer" })
 -- conform
 
 -- mini.pairs
-require("mini.pairs").setup()
+local mini_pairs = require("mini.pairs")
+mini_pairs.setup()
+
+local split_tag_keys = vim.keycode("<CR><C-o>O")
+
+vim.keymap.set("i", "<CR>", function()
+    local line = vim.api.nvim_get_current_line()
+    local cursor_col = vim.api.nvim_win_get_cursor(0)[2]
+    local before_cursor = line:sub(1, cursor_col)
+    local after_cursor = line:sub(cursor_col + 1)
+    local opening_tag = before_cursor:match("<([%w:_.-]+)[^<>]*>$")
+    local closing_tag = after_cursor:match("^</([%w:_.-]+)%s*>")
+    local is_fragment = before_cursor:match("<>$") and after_cursor:match("^</>")
+
+    if is_fragment or (opening_tag and opening_tag == closing_tag) then
+        return split_tag_keys
+    end
+
+    return mini_pairs.cr()
+end, { expr = true, replace_keycodes = false, desc = "New line and split paired tags" })
 -- mini.pairs
 
 -- lualine

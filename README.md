@@ -72,12 +72,12 @@ stow -R zsh tmux pi
 
 Never commit:
 
-- Pi authentication, provider API keys, sessions, package caches, or Epimetheus/Hindsight credentials
+- Pi authentication, provider API keys, sessions, or package caches
 - SSH private keys
 - shell history
 - runtime state and logs
 
-Pi's portable files are tracked under `pi/.pi/agent`. `auth.json`, `epimetheus/`, `sessions/`, `npm/`, caches, trust decisions, and generated model state remain machine-local.
+Pi's portable files are tracked under `pi/.pi/agent`. `auth.json`, `sessions/`, `npm/`, caches, trust decisions, and generated model state remain machine-local.
 
 Interactive shell API keys belong in `~/.config/secrets/env.zsh`, with directory mode `700` and file mode `600`. The tracked `.zshrc` sources it when present. Keep the authoritative copy in a password manager.
 
