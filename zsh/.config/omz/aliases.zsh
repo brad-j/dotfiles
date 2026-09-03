@@ -91,7 +91,7 @@ alias weather='curl wttr.in'
 alias ssh='ssh -t'
 
 # Herdr
-alias h-egwene='herdr --remote egwene --session everyday'
+alias egwene='herdr --remote egwene-1 --session egwene-1'
 
 # tmux/ssh helpers for agent work on zedd.
 #   tz project      create/attach ~/code/project on zedd with pi running in tmux
