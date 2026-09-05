@@ -8,7 +8,7 @@ These packages define five independent agents built on Pi:
 - `proxmox` — guarded Proxmox and homelab operations
 - `writing` — non-creative fiction organization, research, continuity, and administration
 
-Each agent has its own `PI_CODING_AGENT_DIR`, instructions, settings, sessions, and domain resources. The `platform` Pi package provides common UI, handoff behavior, and model-facing secret-path protection without making the agents share mutable runtime state. Its protected-path gate blocks model-initiated file tools and shell commands from accessing agent authentication, Cloak configuration, environment and credential files, and private key material. Its startup header renders the active agent name in ASCII art, with a compact fallback for narrow terminals.
+Each agent has its own `PI_CODING_AGENT_DIR`, instructions, settings, sessions, and domain resources. The `platform` Pi package provides common UI, handoff behavior, and model-facing secret-path protection without making the agents share mutable runtime state. Its protected-path gate checks known file tools and literal shell references for recognized authentication, Cloak configuration, environment/credential files, and private key paths. Its startup header renders the active agent name in ASCII art, with a compact fallback for narrow terminals.
 
 ## Commands
 
@@ -23,6 +23,14 @@ pi-agent writing
 ```
 
 Compatibility commands `pi-code`, `pi-everyday`, `pi-print`, `pi-proxmox`, and `pi-writing` delegate to `pi-agent`. The writing agent starts in `~/omega/Writing`, where it can work across project directories and `ideas/`; set `PI_WRITING_CWD` to override that root for one invocation.
+
+## Secret-path protection
+
+The platform gate checks model calls to `read`, `write`, `edit`, `grep`, `see`, and the target roots of `find`/`ls`. It checks literal and normalized paths, including symlink destinations, leading `@`, file URLs, and Pi's Unicode-space normalization. `bash` and `powershell` retain best-effort literal secret-path checks; PowerShell backslash separators are recognized too.
+
+Directory `grep` gets a metadata-only preflight, including hidden entries and symlinked directories. It blocks the entire search if it finds a protected path, cannot inspect an entry, is cancelled, or exceeds 10,000 entries or 64 directory levels. Globs and `.gitignore` do not exempt a directory from this check. Use an explicit safe file or a narrower clean directory when a mixed workspace is blocked. No secret contents are read by the preflight.
+
+These are accidental-exposure guards, not a sandbox or universal redaction. Directory listings and filename searches can still reveal names under ordinary roots. Files can change after preflight; hard links, unrecognized secret names, arbitrary scripts, computed shell paths, user-entered `!` commands, and internal I/O in other extensions remain outside reliable coverage. Cloak redacts configured text patterns from `read` results only; it does not close these gaps. Use OS-level isolation for hard enforcement.
 
 ## Proxmox command approval
 

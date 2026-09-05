@@ -1,6 +1,7 @@
 import { realpathSync } from "node:fs";
 import { homedir } from "node:os";
 import { basename, dirname, isAbsolute, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 
 export type ProtectedPathKind =
   | "agent authentication"
@@ -61,11 +62,22 @@ function canonicalizeExistingParent(path: string): string | undefined {
   }
 }
 
+/** Match Pi's built-in path spelling rules before checking aliases. */
+export function resolveProtectedToolPath(path: string, cwd: string): string {
+  const normalized = path.replace(/[\u00A0\u2000-\u200A\u202F\u205F\u3000]/g, " ").replace(/^@/, "");
+  const expanded = normalized.startsWith("file://") ? fileURLToPath(normalized) : expandHome(normalized);
+  return isAbsolute(expanded) ? resolve(expanded) : resolve(cwd, expanded);
+}
+
 function pathCandidates(path: string, cwd: string): string[] {
-  const expanded = expandHome(path);
-  const absolute = isAbsolute(expanded) ? resolve(expanded) : resolve(cwd, expanded);
-  const canonical = canonicalizeExistingParent(absolute);
-  return canonical && canonical !== absolute ? [absolute, canonical] : [absolute];
+  // The local see tool only strips @; check that literal path as well as Pi's
+  // normalized spelling so normalization cannot hide a symlink's destination.
+  const literal = resolve(cwd, path.replace(/^@/, ""));
+  const normalized = resolveProtectedToolPath(path, cwd);
+  return [...new Set([literal, normalized].flatMap((candidate) => {
+    const canonical = canonicalizeExistingParent(candidate);
+    return canonical ? [candidate, canonical] : [candidate];
+  }))];
 }
 
 function classifyAbsolutePath(path: string): ProtectedPathKind | undefined {
