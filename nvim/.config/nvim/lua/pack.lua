@@ -13,6 +13,7 @@ vim.pack.add({
     "https://github.com/echasnovski/mini.pairs",
     "https://github.com/nvim-lualine/lualine.nvim",
     "https://github.com/MeanderingProgrammer/render-markdown.nvim",
+    "https://github.com/folke/zen-mode.nvim",
 })
 
 vim.api.nvim_create_autocmd("PackChanged", {
@@ -131,6 +132,17 @@ vim.api.nvim_create_autocmd("FileType", {
 -- render-markdown
 require("render-markdown").setup({})
 -- render-markdown
+
+-- zen-mode
+require("zen-mode").setup({
+    window = {
+        width = 80,
+    },
+})
+vim.keymap.set("n", "<leader>z", function()
+    require("zen-mode").toggle()
+end, { desc = "Toggle Zen Mode" })
+-- zen-mode
 
 -- conform
 require("conform").setup({

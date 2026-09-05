@@ -25,10 +25,11 @@ Make Pi better at bounded execution, task closure, and recurring review without 
   - The code agent defaults to `high` instead of `xhigh`.
   - The print and Proxmox agents remain at `medium`.
   - Use `xhigh` explicitly for architecture, difficult debugging, and other reasoning-heavy work.
-- [ ] **3. Make compaction a checkpoint**
+- [x] **3. Make compaction a checkpoint**
   - Keep overflow recovery automatic.
   - Stop injecting an automatic continuation after threshold or manual compaction.
-  - Notify the user to choose `/close`, `/handoff`, or deliberate continuation.
+  - Notify UI users to review work at the next stopping point; suggest `/close` and `/handoff` only when available.
+  - Preserve Pi's native continuation of active runs and queued messages; this is not a forced pause after every compaction.
 - [ ] **4. Improve handoff reminders**
   - Remind once after ten human prompts or roughly 60–65% context usage.
   - Avoid repeated reminders within the same compaction cycle.

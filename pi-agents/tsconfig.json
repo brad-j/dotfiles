@@ -9,8 +9,13 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "@earendil-works/pi-coding-agent": ["./node_modules/@earendil-works/pi-coding-agent"],
+      "@earendil-works/pi-ai/compat": ["./node_modules/@earendil-works/pi-ai/dist/compat.d.ts"],
+      "typebox": ["./node_modules/typebox"]
+    }
   },
-  "include": ["platform/**/*.ts", "print/**/*.ts", "proxmox/**/*.ts", "writing/**/*.ts"],
+  "include": ["platform/**/*.ts", "print/**/*.ts", "proxmox/**/*.ts", "writing/**/*.ts", "../pi/.pi/agent/extensions/**/*.ts"],
   "exclude": ["node_modules"]
 }

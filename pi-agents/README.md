@@ -24,6 +24,29 @@ pi-agent writing
 
 Compatibility commands `pi-code`, `pi-everyday`, `pi-print`, `pi-proxmox`, and `pi-writing` delegate to `pi-agent`. The writing agent starts in `~/omega/Writing`, where it can work across project directories and `ideas/`; set `PI_WRITING_CWD` to override that root for one invocation.
 
+## Compaction checkpoints
+
+The shared `platform/extensions/continue-after-compaction.ts` now provides notices only; it never injects a continuation message. After successful compaction without a retry, UI sessions receive a reminder to review completed work at the next stopping point and choose whether to stop or continue. `/close` and `/handoff` are suggested only when those commands are available. Notices are suppressed during `/handoff`, automatic retries, and non-UI runs.
+
+Automatic compaction stays enabled. Pi still owns overflow recovery, continuation within active runs, and delivery of queued messages. This extension does not force those runs to pause or cancel user requests. Manual `/compact` on an idle session no longer starts an extra model turn through this extension.
+
+## Writing resource filters
+
+Writing excludes the shared `/handoff` command, its context reminder, and `/skill:handoff`. That workflow asks the model to write outside the writing workspace and set file permissions using shell access; writing permits neither. The other four agents retain the workflow. No writing permission exceptions are added.
+
+Keep this platform package entry in `~/.pi/agents/writing/settings.json` (adjust `source` to the checkout location):
+
+```json
+{
+  "source": "~/dotfiles/pi-agents/platform",
+  "extensions": ["-extensions/handoff/index.ts"],
+  "skills": ["-skills/handoff/SKILL.md"],
+  "prompts": []
+}
+```
+
+The exact-path exclusions preserve other shared extensions and skills. The existing empty `prompts` filter continues to exclude coding-oriented workflow templates. These filters apply to this package entry, not separately installed copies or project overrides. Reload or restart writing after changing them; `/handoff` and `/skill:handoff` should no longer appear in command completion.
+
 ## Secret-path protection
 
 The platform gate checks model calls to `read`, `write`, `edit`, `grep`, `see`, and the target roots of `find`/`ls`. It checks literal and normalized paths, including symlink destinations, leading `@`, file URLs, and Pi's Unicode-space normalization. `bash` and `powershell` retain best-effort literal secret-path checks; PowerShell backslash separators are recognized too.

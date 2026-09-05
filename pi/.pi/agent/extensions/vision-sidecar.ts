@@ -11,7 +11,7 @@
  */
 
 import { complete } from "@earendil-works/pi-ai/compat";
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { readFile } from "node:fs/promises";
 import { extname, resolve } from "node:path";
 import { Type } from "typebox";
@@ -50,7 +50,7 @@ const IMAGE_OMITTED_MARKER = "model does not support images";
 
 export default function (pi: ExtensionAPI) {
 	// Resolve the vision model up front. Falls back gracefully if not configured.
-	function resolveVisionModel(ctx: { modelRegistry: ExtensionAPI extends never ? never : any }) {
+	function resolveVisionModel(ctx: ExtensionContext) {
 		return ctx.modelRegistry.find(VISION_PROVIDER, VISION_MODEL_ID);
 	}
 
@@ -58,7 +58,7 @@ export default function (pi: ExtensionAPI) {
 		path: string,
 		question: string | undefined,
 		signal: AbortSignal | undefined,
-		ctx: any,
+		ctx: ExtensionContext,
 	): Promise<string> {
 		const model = resolveVisionModel(ctx);
 		if (!model) {
@@ -110,7 +110,7 @@ export default function (pi: ExtensionAPI) {
 		);
 
 		const text = response.content
-			.filter((c: any): c is { type: "text"; text: string } => c.type === "text")
+			.filter((c) => c.type === "text")
 			.map((c) => c.text)
 			.join("\n")
 			.trim();
@@ -146,6 +146,7 @@ export default function (pi: ExtensionAPI) {
 			if (!path) {
 				return {
 					content: [{ type: "text", text: "Error: `path` is required." }],
+					details: undefined,
 					isError: true,
 				};
 			}
@@ -157,11 +158,12 @@ export default function (pi: ExtensionAPI) {
 							text: `Error: \`${path}\` is not a supported image file. Supported: ${[...IMAGE_EXTENSIONS].join(", ")}.`,
 						},
 					],
+					details: undefined,
 					isError: true,
 				};
 			}
 
-			onUpdate?.({ content: [{ type: "text", text: `Viewing ${path}…` }] });
+			onUpdate?.({ content: [{ type: "text", text: `Viewing ${path}…` }], details: undefined });
 
 			try {
 				const description = await describeImage(path, params.question, signal, ctx);
@@ -178,6 +180,7 @@ export default function (pi: ExtensionAPI) {
 				const message = error instanceof Error ? error.message : String(error);
 				return {
 					content: [{ type: "text", text: `Error viewing image: ${message}` }],
+					details: undefined,
 					isError: true,
 				};
 			}
@@ -192,7 +195,7 @@ export default function (pi: ExtensionAPI) {
 
 		// Only intercept when read() bailed because the active model lacks vision.
 		const textParts = (event.content ?? [])
-			.filter((c: any): c is { type: "text"; text: string } => c.type === "text")
+			.filter((c) => c.type === "text")
 			.map((c) => c.text);
 		const joined = textParts.join("\n");
 		if (!joined.includes(IMAGE_OMITTED_MARKER)) return;
