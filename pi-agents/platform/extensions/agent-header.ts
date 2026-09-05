@@ -15,6 +15,7 @@ const GLYPHS: Record<string, readonly string[]> = {
     R: ["████", "█  █", "████", "█ █ ", "█  █"],
     T: ["█████", "  █  ", "  █  ", "  █  ", "  █  "],
     V: ["█  █", "█  █", "█  █", "█  █", " ██ "],
+    W: ["█   █", "█   █", "█ █ █", "██ ██", "█   █"],
     X: ["█  █", "█  █", " ██ ", "█  █", "█  █"],
     Y: ["█  █", "█  █", " ██ ", " ██ ", " ██ "],
 };
@@ -47,6 +48,11 @@ const PROFILES: Record<string, AgentProfile> = {
         title: "PROXMOX",
         subtitle: "GUARDED HOMELAB OPERATIONS",
         color: "warning",
+    },
+    writing: {
+        title: "WRITING",
+        subtitle: "ORGANIZATION · RESEARCH · CONTINUITY",
+        color: "accent",
     },
 };
 

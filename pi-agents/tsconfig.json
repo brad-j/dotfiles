@@ -11,6 +11,6 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["platform/**/*.ts", "print/**/*.ts", "proxmox/**/*.ts"],
+  "include": ["platform/**/*.ts", "print/**/*.ts", "proxmox/**/*.ts", "writing/**/*.ts"],
   "exclude": ["node_modules"]
 }

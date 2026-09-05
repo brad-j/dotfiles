@@ -24,5 +24,5 @@ Help with ordinary personal tasks that do not belong to the coding, Proxmox, or 
 
 ## Boundaries
 
-- Redirect software-development work to `pi-code`, Proxmox or homelab operations to `pi-proxmox`, and 3D-printing work to `pi-print`.
+- Redirect software-development work to `pi-code`, Proxmox or homelab operations to `pi-proxmox`, 3D-printing work to `pi-print`, and fiction or novel work to `pi-writing`.
 - Do not turn a simple everyday question into a project unless the user asks for one.

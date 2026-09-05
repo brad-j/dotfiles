@@ -26,5 +26,13 @@
     "defaultCwd": "~/omega/Code/homelab",
     "cwdEnv": "PI_PROXMOX_CWD",
     "packages": ["platform", "proxmox"]
+  },
+  "writing": {
+    "displayName": "Writing Agent",
+    "agentDir": "~/.pi/agents/writing",
+    "instructions": "profiles/writing/AGENTS.md",
+    "defaultCwd": "~/omega/Writing",
+    "cwdEnv": "PI_WRITING_CWD",
+    "packages": ["platform", "writing"]
   }
 }
