@@ -24,6 +24,14 @@ pi-agent writing
 
 Compatibility commands `pi-code`, `pi-everyday`, `pi-print`, `pi-proxmox`, and `pi-writing` delegate to `pi-agent`. The writing agent starts in `~/omega/Writing`, where it can work across project directories and `ideas/`; set `PI_WRITING_CWD` to override that root for one invocation.
 
+## Development checks
+
+Run `pnpm check` from `pi-agents/` for tests, strict TypeScript checking, registry validation, and agent doctor checks. Development Pi packages are pinned to `0.85.1`, matching the installed runtime when aligned; future runtime upgrades require a separate dependency review.
+
+The compiler also includes `../pi/.pi/agent/extensions/**/*.ts` (Caveman and vision-sidecar). Its `paths` mappings resolve their SDK imports through this project's development dependencies, mirroring Pi's runtime module aliases without moving extensions or adding runtime installations. Regression tests verify compiler coverage and load both extensions through the real SDK using empty project/runtime roots, without starting an agent session or calling providers.
+
+The six release-age exceptions in `pnpm-workspace.yaml` were explicitly approved for exact `0.85.1` package versions; they do not exempt future releases. Existing build-script restrictions remain unchanged. Vision-sidecar's broader behavior cleanup remains separate from these typecheck fixes.
+
 ## Compaction checkpoints
 
 The shared `platform/extensions/continue-after-compaction.ts` now provides notices only; it never injects a continuation message. After successful compaction without a retry, UI sessions receive a reminder to review completed work at the next stopping point and choose whether to stop or continue. `/close` and `/handoff` are suggested only when those commands are available. Notices are suppressed during `/handoff`, automatic retries, and non-UI runs.

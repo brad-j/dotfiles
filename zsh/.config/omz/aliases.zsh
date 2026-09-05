@@ -31,7 +31,7 @@ command -v netlify >/dev/null 2>&1 && alias ntl='netlify'
 alias ga='git add -A'
 alias gp='git push'
 alias gc='git commit -m'
-alias gs='git status'
+alias gs='git status --short'
 
 # eza
 if command -v eza >/dev/null 2>&1; then

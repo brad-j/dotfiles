@@ -14,9 +14,16 @@ vim.opt.smartindent = true
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "markdown",
     desc = "Enable word wrapping in Markdown files",
-    callback = function()
+    callback = function(event)
         vim.opt_local.wrap = true
         vim.opt_local.linebreak = true
+
+        vim.keymap.set("n", "j", function()
+            return vim.v.count == 0 and "gj" or "j"
+        end, { buffer = event.buf, expr = true, desc = "Move down by display line" })
+        vim.keymap.set("n", "k", function()
+            return vim.v.count == 0 and "gk" or "k"
+        end, { buffer = event.buf, expr = true, desc = "Move up by display line" })
     end,
 })
 vim.opt.inccommand = "split"
