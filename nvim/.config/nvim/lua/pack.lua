@@ -14,6 +14,8 @@ vim.pack.add({
     "https://github.com/nvim-lualine/lualine.nvim",
     "https://github.com/MeanderingProgrammer/render-markdown.nvim",
     "https://github.com/folke/zen-mode.nvim",
+    "https://github.com/rachartier/tiny-cmdline.nvim",
+    "https://github.com/kevinhwang91/nvim-hlslens",
 })
 
 vim.api.nvim_create_autocmd("PackChanged", {
@@ -94,6 +96,29 @@ require("blink.cmp").setup({
     fuzzy = { implementation = "lua" },
 })
 -- blink
+
+-- tiny-cmdline
+local tiny_cmdline = require("tiny-cmdline")
+tiny_cmdline.setup({
+    on_reposition = tiny_cmdline.adapters.blink,
+})
+-- tiny-cmdline
+
+-- hlslens
+local hlslens = require("hlslens")
+hlslens.setup({})
+
+local function search_with_hlslens(key)
+    return function()
+        vim.cmd("normal! " .. vim.v.count1 .. key)
+        hlslens.start()
+    end
+end
+
+for _, key in ipairs({ "n", "N", "*", "#", "g*", "g#" }) do
+    vim.keymap.set("n", key, search_with_hlslens(key), { silent = true, desc = "Search with hlslens" })
+end
+-- hlslens
 
 -- treesitter
 local ts_parsers = {

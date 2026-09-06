@@ -1,4 +1,5 @@
 vim.g.netrw_banner = 0
+vim.opt.cmdheight = 0
 vim.opt.guicursor = ""
 vim.opt.number = true
 vim.opt.relativenumber = true
