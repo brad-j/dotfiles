@@ -2,8 +2,8 @@
   "lastChangelogVersion": "0.85.1",
   "theme": "dark",
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-sol",
-  "defaultThinkingLevel": "high",
+  "defaultModel": "gpt-6-astra",
+  "defaultThinkingLevel": "medium",
   "tuiMode": "fullscreen",
   "packages": [
     "~/dotfiles/pi-agents/platform",
