@@ -162,6 +162,10 @@ require("render-markdown").setup({})
 require("zen-mode").setup({
     window = {
         width = 80,
+        options = {
+            number = false,
+            relativenumber = false,
+        },
     },
 })
 vim.keymap.set("n", "<leader>z", function()
